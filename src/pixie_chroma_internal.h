@@ -84,7 +84,7 @@ class PixieChroma{
 		/*+-- Functions - print(  ) ----------------------------------------------------------*/ 
 		/*|*/ void print( uint8_t bitmap_col_1, uint8_t bitmap_col_2, uint8_t bitmap_col_3, uint8_t bitmap_col_4, uint8_t bitmap_col_5 );
 		/*|*/ void print( char chr );
-		/*|*/ void print( char* message );
+		/*|*/ void print( const char* message );
 		/*|*/ void print( int16_t input );
 		/*|*/ void print( uint16_t input );
 		/*|*/ void print( int32_t input );
@@ -275,8 +275,8 @@ class PixieChroma{
 		// Functions ----------------------------------
 		void build_controller( const uint8_t pin );
 		void calc_xy();
-		void fetch_shortcode( char* message, uint16_t code_start, uint16_t code_end, bool return_code = false );
-		void parse_custom_shortcode( char* message, uint16_t code_start, uint16_t code_end, bool return_code = false );
+		void fetch_shortcode( const  char* message, uint16_t code_start, uint16_t code_end, bool return_code = false );
+		void parse_custom_shortcode( const char* message, uint16_t code_start, uint16_t code_end, bool return_code = false );
 		int16_t calc_justification( t_justification justification, uint8_t row );
 		void scroll_char(char c, uint8_t row);
 		void scroll_char(uint8_t* bitmap, uint8_t row);

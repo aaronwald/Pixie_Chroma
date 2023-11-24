@@ -511,17 +511,22 @@ void PixieChroma::set_update_mode( t_update_mode mode, uint16_t FPS ){
         set_frame_rate_target( FPS );
 		
 		#if defined( ARDUINO_ARCH_ESP8266 ) || defined( ARDUINO_ARCH_ESP32 )
-			animate.attach_ms<typeof this>(
-				round(1000 / float(FPS)),
-				[](typeof this _p){ _p->show(); },
-			   // This. ^ This is the magic sauce
-			   // right here. This is apparently how
-			   // you add a non-static class member to
-			   // Ticker from within a class and I
-			   // hate it. Readability sucks, oh well.
-			   // At least I got a Lambdaghini.
-				this
-			);
+            uint32_t milliseconds = round(1000 / float(FPS));
+            Ticker::callback_function_t cb = [&]()
+            { show(); };
+            animate.attach_ms(milliseconds, cb);
+
+            // animate.attach_ms<typeof this>(
+            //     milliseconds,
+            //     [](typeof this _p)
+            //     { _p->show(); },
+            //     // This. ^ This is the magic sauce
+            //     // right here. This is apparently how
+            //     // you add a non-static class member to
+            //     // Ticker from within a class and I
+            //     // hate it. Readability sucks, oh well.
+            //     // At least I got a Lambdaghini.
+            //     this);
 		#elif defined( ARDUINO_ARCH_TEENSY_3_X )
 			animate.begin(
 				[](typeof this _p){ _p->show(); },
@@ -1061,7 +1066,7 @@ void PixieChroma::print( char chr ){
     
     @param  message  char* string to print
 *///............................................................................
-void PixieChroma::print( char* message ){
+void PixieChroma::print( const char* message ){
 	uint16_t len = strlen(message);
 	uint16_t i = 0;
 	while (i < len - 1) {
@@ -1865,7 +1870,7 @@ void PixieChroma::color_blur_x( fract8 blur_amount ){
     uint8_t keep = 255 - blur_amount;
     uint8_t seep = blur_amount >> 1;
     for(  uint8_t row = 0; row < matrix_height; row++ ) {
-        uint8_t carryover = 0;
+        CRGB carryover = CRGB::Black;
         for(  uint8_t i = 0; i < matrix_width; i++ ) {
             CRGB cur = color_map[xy( i,row )];
             CRGB part = cur;
@@ -2752,7 +2757,7 @@ void PixieChroma::calc_xy(){
 }
 
 
-void PixieChroma::fetch_shortcode( char* message, uint16_t code_start, uint16_t code_end, bool return_code ){
+void PixieChroma::fetch_shortcode( const char* message, uint16_t code_start, uint16_t code_end, bool return_code ){
 	if( message[code_start] == '#' ){ // custom data, no lookup needed
 		parse_custom_shortcode( message, code_start+1, code_end, return_code );
 		return;
@@ -2837,7 +2842,7 @@ void PixieChroma::fetch_shortcode( char* message, uint16_t code_start, uint16_t 
 }
 
 
-void PixieChroma::parse_custom_shortcode( char* message, uint16_t code_start, uint16_t code_end, bool return_code ){
+void PixieChroma::parse_custom_shortcode( const char* message, uint16_t code_start, uint16_t code_end, bool return_code ){
 	uint8_t input[10];
 	
 	for(uint8_t i = 0; i < (code_end-code_start); i++){
@@ -3036,11 +3041,11 @@ bool PixieChroma::unit_tests(){
 	//	analogRead( ANALOG_PIN )
 	//);
 	
-	char* border  = "+---------------------------------------------+";
+	const char* border  = "+---------------------------------------------+";
 
-	char* testing = "Testing: ";
-	char* PASS    = "PASS";
-	char* FAIL    = "FAIL\n--------------------------------------------------------- #####";
+	const char* testing = "Testing: ";
+	const char* PASS    = "PASS";
+	const char* FAIL    = "FAIL\n--------------------------------------------------------- #####";
 	bool  success = true;
 	
 	
