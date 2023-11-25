@@ -2203,7 +2203,7 @@ void PixieChroma::print_xy_table(){
 	@param   message  Message to scroll across the matrix
 	@param   row      Row to scroll the message on (default 0)
 *///............................................................................
-void PixieChroma::scroll_message( char* message, uint8_t row ){	
+void PixieChroma::scroll_message( const char* message, uint8_t row ){	
 	scrolling[row] = true;
 
 	uint16_t len = strlen(message);

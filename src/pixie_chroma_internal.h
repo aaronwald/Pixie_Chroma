@@ -156,7 +156,7 @@ class PixieChroma{
 		/*|*/ uint8_t  get_pixel_mask( int32_t x, int32_t y );
 		/*|*/ CRGB     get_pixel_color( int32_t x, int32_t y );
 		/*|*/ void     print_xy_table();
-		/*|*/ void     scroll_message( char* message, uint8_t row = 0 );
+		/*|*/ void     scroll_message( const char* message, uint8_t row = 0 );
 		/*|*/ void     set_pixel_mask( int32_t x, int32_t y, uint8_t value );
 		/*|*/ void     set_pixel_color( int32_t x, int32_t y, CRGB color );
 		/*|*/ void     shift_mask_x( int16_t amount, int16_t row = -1 );
